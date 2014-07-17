@@ -10,7 +10,7 @@ define(['libs'], function () {
                 , container: window
                 , event: ['scroll', 'resize']    //触发延迟加载的事件,
                 , time: 100              //延时,单位ms
-                , threshold: 180          //一定距离， 单位px
+                , threshold: 0          //一定距离， 单位px
                 , vertical: true
                 , stateAttr: 'data-load-state'
                 , onComplete: Noop
@@ -86,9 +86,15 @@ define(['libs'], function () {
                 , t = el.offset()[OFFSET]
                 , winSize = this.options.vertical ? this.container.height() : this.container.width()
                 , scrollSize = this.container[SCROLL]();
-            //, docSize = winSize + scrollSize;
+			
 
-            return t >= scrollSize && t <= winSize + scrollSize + this.options.threshold;
+			//display:none 的元素offset不准确
+			if (el.css('display') === 'none') {
+				return false;
+			} else {
+				return t >= scrollSize && t <= winSize + scrollSize + this.options.threshold;
+			}
+            
         }
         /**
         * 通知插件更新一下异步加载的dom
